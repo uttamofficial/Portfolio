@@ -4,7 +4,7 @@ import { HomeIcon, NotebookIcon } from "lucide-react";
 export const DATA = {
   name: "Uttam Kumar",
   initials: "UK",
-  url: "https://amanlabh.me",
+  url: "https://portfolio-uk1619.vercel.app/",
   location: "Madhya Pradesh, India",
   locationLink: "https://www.google.com/maps/place/VIT+Bhopal+University/@23.0774764,76.8487122,17z/data=!3m1!4b1!4m6!3m5!1s0x397ce9ceaaaaaaab:0xa224b6b82b421f83!8m2!3d23.0774715!4d76.8512871!16s%2Fg%2F11c61hcx7z?entry=ttu&g_ep=EgoyMDI0MTIxMS4wIKXMDSoASAFQAw%3D%3D",
   description:
@@ -222,7 +222,7 @@ export const DATA = {
       links: [
         {
           type: "Website",
-          href: "https://super-cranachan-9d7d71.netlify.app/",
+          href: "https://fitbrainz.netlify.app/",
           icon: <Icons.globe className="size-3" />,
         },
         {
