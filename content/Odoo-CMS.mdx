@@ -1,0 +1,261 @@
+---
+title: "Odoo CMS with React"
+publishedAt: "2024-09-30"
+summary: "My first post on my new blog."
+---
+
+Step 1: Create a React Project
+Open your terminal and type the command below to create a new project.
+
+```bash
+npx create-react-app odoo-product-page
+cd odoo-product-page
+```
+Navigate to Project root directory:
+```bash
+cd odoo-product-page
+```
+Step 2: Setup Tailwind CSS
+And Now we can install Tailwind CSS and its dependencies via npm:
+```bash
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init
+```
+
+This will generate a tailwind.config.js file in your project root, where you can configure Tailwind CSS
+
+Configure Tailwind CSS
+Open the tailwind.config.js file and set up the content paths i.e include all files to scan for class names.
+
+```CSS
+module.exports = {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}", // Add paths to all components
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
+
+In the src directory, open the index.css file and add the following lines to import tailwind’s base, components, and utilities styles:
+
+```CSS
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+Step 3: Install the React Router Dom Packages
+Basically, React Router is used to define multiple routes in the application, so we will add React Router to navigate to the product page.
+
+```bash
+npm install react-router-dom
+```
+
+and we can run the command to run React app. and Tailwind CSS and routing will now be functional.
+
+```bash
+npm run start
+```
+Step 4: Create the Product Page Component
+We’ll start by creating a file named ProductPage.js in the src/components folder.
+
+```js
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+const ProductPage = () => {
+  const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState();
+  const { sku = "" } = useParams();
+  // Function to make the API request
+  const postData = () => {
+    fetch("Your-ODOO-API-ENDPOINT", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        Authenticate: "Your Authenticate Key",
+      },
+      body: JSON.stringify({
+        filter: { url_key: { eq: sku } },
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Response Data:", data);
+        setProduct(data);
+      })
+      .catch((error) => {
+        console.error("Response Error:", error);
+      });
+  };
+  useEffect(() => {
+    postData();
+  }, []);
+  const productdetail = product?.products?.items?.[0];
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid md:grid-cols-2 gap-12">
+        <div className="space-y-4">
+          <div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden border border-solid">
+            <img
+              alt={productdetail?.thumbnail?.name}
+              className="h-full w-full object-contain mix-blend-multiply bg-slate-50"
+              src={productdetail?.thumbnail?.id}
+            />
+          </div>
+        </div>
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-3xl text-slate-900 font-bold">
+              {productdetail?.name}
+            </h1>
+          </div>
+          <p className="text-slate-500 text-lg">
+            {productdetail?.description}
+          </p>
+          <div className="text-3xl font-bold text-slate-600">$299.99</div>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center border py-1 border-[#35979C] rounded-sm">
+              <button
+                className="px-3 py-1 text-[#35979C]"
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 14 15"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M2.91602 7.5H11.0827"
+                    stroke="#35979C"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <span className="px-3 py-1 text-xl">{quantity}</span>
+              <button
+                className="px-3 py-1  text-[#35979C]"
+                onClick={() => setQuantity(quantity + 1)}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 14 15"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7 3.4165V11.5832"
+                    stroke="#35979C"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M2.91602 7.5H11.0827"
+                    stroke="#35979C"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
+            <button className="flex-1 items-center px-10 gap-2 flex max-w-fit text-xl py-2.5 font-bold bg-[#35979C] text-white rounded ">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="#ffffff"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                />
+              </svg>
+              <span>Add to Cart</span>
+            </button>
+          </div>
+          <button className="flex items-center gap-1 text-[#35979C]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+              />
+            </svg>
+            <span className="text-sm text-teal-700 font-medium">Add to Wishlist</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+export default ProductPage
+
+```
+
+The ProductPage component in React displays sections like an image, product details, and a quantity selector. It fetches product data from an API and offers ‘Add to Cart’ and ‘Buy Now’ actions.
+
+Step 5: Mount the Product Compoment
+Open App.js File and replace the code to import ProductPage, Header, TopBar, and Footer, and Router for displaying the product page
+
+```js
+
+import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import "./App.css";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import ProductPage from "./components/Product";
+import TopBar from "./components/TopBar";
+
+function App() {
+  return (
+    <>
+      <Header />
+      <TopBar />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/product/:sku" element={<ProductPage />} />
+        </Routes>
+      </BrowserRouter>
+      <Footer />
+    </>
+  );
+}
+
+export default App;
+```
+
+And Now save or reload your react app.
+
+
+Conclusion:
+
+Congratulations! You’ve successfully learn how to create an odoo product page in React JS.
+
+Start your Headless Development with Webkul.
+
+Thanks for reading this blog.
+
+Hope this blog helped you to better understand how to create an odoo product page in React Js.
+
+Happy Coding!!
