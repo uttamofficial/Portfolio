@@ -322,7 +322,7 @@ export const DATA = {
       ],
     },
     {
-      title: "Google - Generative AI for Educators Certificate",
+      title: "Google - Generative AI Certificate",
       dates: "February, 2024",
       location: "Attended Remote",
       description:
